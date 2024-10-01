@@ -5,7 +5,6 @@
 		<title>Phonetics compendium</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=1">
-		<link href="/css/style.css" rel="stylesheet" media="screen">
         <script src="data.js" defer></script>
         <script src="script.js" defer></script>
         <script src="https://unpkg.com/petite-vue" defer init></script>
@@ -27,7 +26,6 @@
         }">
             <button v-scope="{ on: false }" v-for="language in languages" @click="on ? remove(language) : add(language); on = !on">{{ language }} {{ on }}</button>
             <button v-scope="{ on: false }" v-for="feature in features" @click="on ? remove(feature) : add(feature); on = !on">{{ feature }} {{ on }}</button>
-            <p><span v-for="filter in filters">{{ filter }} </span></p>
 
             <div v-for="dataset in datasets">
                 <div v-if="filters.length === 0 || filters.includes(dataset.language) || dataset.features.some(f => filters.includes(f))">
@@ -35,13 +33,14 @@
                     <p v-for="feature in dataset.features">{{ feature }}</p>
                     <table v-scope="{ hasOrthography: dataset.words.some(w => !!w.orthography) }">
                         <tr v-for="word in dataset.words">
-                            <td>{{ word.url }}</td>
+                            <td><audio controls><source :src="'audio/' + word.url + '.wav'" type="audio/wav"></source></audio></td>
                             <td>[{{ word.ipa }}]</td>
                             <td>&lsquo;{{ word.gloss }}&rsquo;</td>
                             <td v-if="hasOrthography">{{ word.orthography }}</td>
                         </tr>
                     </table>
 
+                    <p v-if="dataset.speaker">Speaker: {{ dataset.speaker }}</p>
                     <p v-if="dataset.ucla"><a :href="dataset.ucla">UCLA Phonetics Lab</a></p>
                 </div>
             </div>
